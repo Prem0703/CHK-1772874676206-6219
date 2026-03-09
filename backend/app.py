@@ -170,7 +170,7 @@ def chat():
         return jsonify({"error": "Chat failed"}), 500
 
 # ====================================
-# BOOK APPOINTMENT rohit
+# BOOK APPOINTMENT rohit prem both
 # ====================================
 
 @app.route("/book-appointment", methods=["POST"])

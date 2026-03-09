@@ -1,0 +1,42 @@
+.appointment-container {
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.appointment-card {
+  background: white;
+  padding: 30px;
+  width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.appointment-card h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #0b3d91;
+}
+
+.appointment-card input,
+.appointment-card select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.appointment-card button {
+  width: 100%;
+  padding: 12px;
+  background: #0b3d91;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.appointment-card button:hover {
+  background: #1559d6;
+}

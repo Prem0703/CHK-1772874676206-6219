@@ -1,0 +1,211 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import jsPDF from "jspdf";
+import { getAuth } from "firebase/auth";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import { db } from "../firebase";
+import "./Dashboard.css";
+
+function Dashboard() {
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const [stats, setStats] = useState({
+    total: 0,
+    high: 0,
+    medium: 0,
+    low: 0,
+  });
+
+  useEffect(() => {
+    if (user) fetchStats();
+  }, [user]);
+
+  const fetchStats = async () => {
+    const q = query(
+      collection(db, "predictions"),
+      where("uid", "==", user.uid)
+    );
+
+    const snapshot = await getDocs(q);
+
+    let total = 0;
+    let high = 0;
+    let medium = 0;
+    let low = 0;
+
+    snapshot.forEach((doc) => {
+      total++;
+      const conf = doc.data().confidence;
+
+      if (conf < 0.5) low++;
+      else if (conf < 0.8) medium++;
+      else high++;
+    });
+
+    setStats({ total, high, medium, low });
+  };
+
+  const handleFileChange = (e) => {
+    const selected = e.target.files[0];
+    setFile(selected);
+    if (selected) {
+      setPreview(URL.createObjectURL(selected));
+    }
+  };
+
+  const handlePredict = async () => {
+    if (!file) return alert("Please select image");
+    if (!user) return alert("Login required");
+
+    setLoading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await axios.post(
+        "http://127.0.0.1:5000/predict",
+        formData
+      );
+
+      setResult(res.data);
+
+      await addDoc(collection(db, "predictions"), {
+        uid: user.uid,
+        email: user.email,
+        disease: res.data.disease,
+        confidence: res.data.confidence,
+        createdAt: serverTimestamp(),
+      });
+
+      fetchStats();
+    } catch (err) {
+      alert("Prediction failed");
+    }
+
+    setLoading(false);
+  };
+
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(20);
+    doc.text("AI Medical Report", 20, 20);
+
+    doc.setFontSize(14);
+    doc.text(`Patient: ${user.email}`, 20, 40);
+    doc.text(`Disease: ${result.disease}`, 20, 60);
+    doc.text(
+      `Confidence: ${Math.round(result.confidence * 100)}%`,
+      20,
+      80
+    );
+
+    doc.save("Medical_Report.pdf");
+  };
+
+  const getRisk = () => {
+    if (!result) return null;
+
+    if (result.confidence < 0.5)
+      return { label: "Low Risk", color: "#28a745" };
+    if (result.confidence < 0.8)
+      return { label: "Medium Risk", color: "#ff9800" };
+    return { label: "High Risk", color: "#dc3545" };
+  };
+
+  return (
+    <div className="dashboard-container">
+
+      {/* Stats Section */}
+      <div className="stats-grid">
+        <div className="stat-card blue">
+          <h3>{stats.total}</h3>
+          <p>Total Predictions</p>
+        </div>
+
+        <div className="stat-card red">
+          <h3>{stats.high}</h3>
+          <p>High Risk</p>
+        </div>
+
+        <div className="stat-card orange">
+          <h3>{stats.medium}</h3>
+          <p>Medium Risk</p>
+        </div>
+
+        <div className="stat-card green">
+          <h3>{stats.low}</h3>
+          <p>Low Risk</p>
+        </div>
+      </div>
+
+      {/* Prediction Section */}
+      <div className="prediction-card">
+        <h2>AI Disease Prediction</h2>
+
+        <div className="upload-section">
+          <input type="file" onChange={handleFileChange} />
+          <button onClick={handlePredict}>
+            {loading ? "Analyzing..." : "Predict"}
+          </button>
+        </div>
+
+        {preview && (
+          <div className="image-preview">
+            <img src={preview} alt="preview" />
+          </div>
+        )}
+
+        {result && (
+          <div className="result-card">
+            <h3>{result.disease}</h3>
+
+            <div className="progress-bar">
+              <div
+                className="progress-fill"
+                style={{
+                  width: `${Math.round(result.confidence * 100)}%`,
+                  backgroundColor: getRisk().color,
+                }}
+              ></div>
+            </div>
+
+            <p>
+              Confidence: {Math.round(result.confidence * 100)}%
+            </p>
+
+            <span
+              className="risk-badge"
+              style={{ backgroundColor: getRisk().color }}
+            >
+              {getRisk().label}
+            </span>
+
+            <button
+              className="download-btn"
+              onClick={downloadPDF}
+            >
+              Download Medical Report
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default Dashboard;

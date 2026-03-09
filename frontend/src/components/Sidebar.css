@@ -1,0 +1,55 @@
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: #0b3d91;
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-card {
+  background: white;
+  color: #0b3d91;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-item {
+  padding: 12px;
+  margin-bottom: 10px;
+  background: #164caa;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.menu-item:hover {
+  background: #1e90ff;
+}
+
+.menu-item.active {
+  background: white;
+  color: #0b3d91;
+  font-weight: bold;
+}
+.logout-btn {
+  margin-top: auto;
+  padding: 10px;
+  background: #dc3545;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background: #c82333;
+}

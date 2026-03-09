@@ -1,0 +1,43 @@
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Body Background */
+body {
+  background-color: #f4f7fb;
+}
+
+/* Headings */
+h1, h2, h3 {
+  color: #0b3d91;
+}
+
+/* Buttons Global Style */
+button {
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Input Global Style */
+input, textarea, select {
+  outline: none;
+  font-size: 14px;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0b3d91;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eaeaea;
+}

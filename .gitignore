@@ -26,5 +26,4 @@ node_modules/
 *.pyc
 .env
 
-frontend/
 .vscode/

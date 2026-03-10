@@ -12,97 +12,111 @@ import Appointment from "./pages/Appointment";
 import Chatbot from "./pages/Chatbot";
 import Profile from "./pages/Profile";
 import Safety from "./pages/Safety";
+import MedicineReminder from "./pages/MedicineReminder";
 
 function App() {
 
-  return (
+return (
 
-    <Router>
+<Router>
 
-      <Routes>
+  <Routes>
 
-        {/* Public Routes */}
+    {/* Public Routes */}
 
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+    <Route path="/" element={<Login />} />
+    <Route path="/register" element={<Register />} />
 
-        {/* Protected Routes */}
+    {/* Protected Routes */}
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Dashboard />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+    <Route
+      path="/dashboard"
+      element={
+        <ProtectedRoute>
+          <Layout>
+            <Dashboard />
+          </Layout>
+        </ProtectedRoute>
+      }
+    />
 
-        <Route
-          path="/history"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <History />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+    <Route
+      path="/history"
+      element={
+        <ProtectedRoute>
+          <Layout>
+            <History />
+          </Layout>
+        </ProtectedRoute>
+      }
+    />
 
-        <Route
-          path="/appointment"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Appointment />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+    <Route
+      path="/appointment"
+      element={
+        <ProtectedRoute>
+          <Layout>
+            <Appointment />
+          </Layout>
+        </ProtectedRoute>
+      }
+    />
 
-        <Route
-          path="/chatbot"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Chatbot />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+    <Route
+      path="/chatbot"
+      element={
+        <ProtectedRoute>
+          <Layout>
+            <Chatbot />
+          </Layout>
+        </ProtectedRoute>
+      }
+    />
 
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Profile />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+    <Route
+      path="/profile"
+      element={
+        <ProtectedRoute>
+          <Layout>
+            <Profile />
+          </Layout>
+        </ProtectedRoute>
+      }
+    />
 
-        <Route
-          path="/safety"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Safety />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
+    {/* NEW PAGE */}
 
-        {/* Default redirect */}
+    <Route
+      path="/reminder"
+      element={
+        <ProtectedRoute>
+          <Layout>
+            <MedicineReminder />
+          </Layout>
+        </ProtectedRoute>
+      }
+    />
 
-        <Route path="*" element={<Navigate to="/" />} />
+    <Route
+      path="/safety"
+      element={
+        <ProtectedRoute>
+          <Layout>
+            <Safety />
+          </Layout>
+        </ProtectedRoute>
+      }
+    />
 
-      </Routes>
+    {/* Default redirect */}
 
-    </Router>
+    <Route path="*" element={<Navigate to="/" />} />
 
-  );
+  </Routes>
+
+</Router>
+
+);
 
 }
 

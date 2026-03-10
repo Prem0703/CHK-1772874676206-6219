@@ -32,10 +32,14 @@ function Dashboard() {
   });
 
   useEffect(() => {
-    if (user) fetchStats();
+    if (user) {
+      fetchStats();
+    }
   }, [user]);
 
   const fetchStats = async () => {
+
+    if (!user) return;
 
     const q = query(
       collection(db, "predictions"),
@@ -68,15 +72,16 @@ function Dashboard() {
   const handleFileChange = (e) => {
 
     const selected = e.target.files[0];
-    setFile(selected);
 
-    if (selected) {
-      setPreview(URL.createObjectURL(selected));
-    }
+    if (!selected) return;
+
+    setFile(selected);
+    setPreview(URL.createObjectURL(selected));
 
   };
 
-  // 📍 GET GPS LOCATION
+  /* ---------- LOCATION ---------- */
+
   const getLocation = () => {
 
     return new Promise((resolve, reject) => {
@@ -92,16 +97,14 @@ function Dashboard() {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
 
-          const locationLink =
+          const link =
             "https://www.google.com/maps?q=" + lat + "," + lon;
 
-          resolve(locationLink);
+          resolve(link);
 
         },
 
-        () => {
-          reject("Location permission denied");
-        }
+        () => reject("Location permission denied")
 
       );
 
@@ -109,14 +112,17 @@ function Dashboard() {
 
   };
 
-  // 🚑 MANUAL EMERGENCY ALERT
+  /* ---------- MANUAL AMBULANCE ---------- */
+
   const callAmbulance = async () => {
+
+    if (!user) return alert("Login required");
 
     try {
 
       const location = await getLocation();
 
-      const templateParams = {
+      const params = {
         name: user.email,
         age: "Unknown",
         blood: "Unknown",
@@ -128,19 +134,21 @@ function Dashboard() {
       await emailjs.send(
         "service_d0mycg9",
         "template_sm7261w",
-        templateParams,
+        params,
         "p8SiSpXWnsj8pW_6g"
       );
 
       alert("🚑 Ambulance Alert Sent With Location");
 
-    } catch (err) {
+    } catch {
 
       alert("Location permission required");
 
     }
 
   };
+
+  /* ---------- AI PREDICTION ---------- */
 
   const handlePredict = async () => {
 
@@ -171,12 +179,13 @@ function Dashboard() {
 
       fetchStats();
 
-      // 🚨 AUTO ALERT IF HIGH RISK
+      /* ---------- AUTO ALERT ---------- */
+
       if (res.data.confidence >= 0.8) {
 
         const location = await getLocation();
 
-        const templateParams = {
+        const params = {
           name: user.email,
           age: "Unknown",
           blood: "Unknown",
@@ -185,10 +194,10 @@ function Dashboard() {
           location: location
         };
 
-        emailjs.send(
+        await emailjs.send(
           "service_d0mycg9",
           "template_sm7261w",
-          templateParams,
+          params,
           "p8SiSpXWnsj8pW_6g"
         );
 
@@ -196,7 +205,7 @@ function Dashboard() {
 
       }
 
-    } catch (err) {
+    } catch {
 
       alert("Prediction failed");
 
@@ -206,7 +215,11 @@ function Dashboard() {
 
   };
 
+  /* ---------- PDF ---------- */
+
   const downloadPDF = () => {
+
+    if (!result) return;
 
     const doc = new jsPDF();
 
@@ -214,10 +227,10 @@ function Dashboard() {
     doc.text("AI Medical Report", 20, 20);
 
     doc.setFontSize(14);
-    doc.text(`Patient: ${user.email}`, 20, 40);
-    doc.text(`Disease: ${result?.disease}`, 20, 60);
+    doc.text(`Patient: ${user?.email}`, 20, 40);
+    doc.text(`Disease: ${result.disease}`, 20, 60);
     doc.text(
-      `Confidence: ${Math.round(result?.confidence * 100)}%`,
+      `Confidence: ${Math.round(result.confidence * 100)}%`,
       20,
       80
     );
@@ -244,7 +257,7 @@ function Dashboard() {
 
     <div className="dashboard-container">
 
-      {/* Stats */}
+      {/* STATS */}
 
       <div className="stats-grid">
 
@@ -270,7 +283,7 @@ function Dashboard() {
 
       </div>
 
-      {/* Prediction */}
+      {/* PREDICTION */}
 
       <div className="prediction-card">
 
@@ -287,11 +300,9 @@ function Dashboard() {
         </div>
 
         {preview && (
-
           <div className="image-preview">
             <img src={preview} alt="preview" />
           </div>
-
         )}
 
         {result && (
@@ -301,15 +312,13 @@ function Dashboard() {
             <h3>{result.disease}</h3>
 
             <div className="progress-bar">
-
               <div
                 className="progress-fill"
                 style={{
                   width: `${Math.round(result.confidence * 100)}%`,
-                  backgroundColor: getRisk().color,
+                  backgroundColor: getRisk().color
                 }}
-              ></div>
-
+              />
             </div>
 
             <p>
@@ -334,25 +343,13 @@ function Dashboard() {
 
         )}
 
-        {/* 🚑 EMERGENCY BUTTON */}
+        {/* EMERGENCY BUTTON */}
 
         <button
-          style={{
-            marginTop: "20px",
-            background: "#e60023",
-            color: "white",
-            padding: "12px",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-            fontWeight: "bold",
-            width: "100%"
-          }}
+          className="emergency-btn"
           onClick={callAmbulance}
         >
-
           🚑 Call Ambulance / Emergency Help
-
         </button>
 
       </div>

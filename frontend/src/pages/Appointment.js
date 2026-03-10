@@ -19,9 +19,15 @@ function Appointment() {
       return;
     }
 
+    if (age <= 0) {
+      alert("Enter valid age");
+      return;
+    }
+
     try {
 
-      // 🔹 Save appointment to Firebase
+      /* ---------- SAVE FIREBASE ---------- */
+
       await addDoc(collection(db, "appointments"), {
         name,
         age,
@@ -32,7 +38,8 @@ function Appointment() {
         createdAt: Timestamp.now(),
       });
 
-      // 🔹 Send Email using EmailJS
+      /* ---------- EMAIL ---------- */
+
       const templateParams = {
         name: name,
         age: age,
@@ -48,7 +55,9 @@ function Appointment() {
         "p8SiSpXWnsj8pW_6g"
       );
 
-      alert("Appointment Booked & Email Sent Successfully");
+      alert("✅ Appointment Booked Successfully");
+
+      /* ---------- RESET FORM ---------- */
 
       setName("");
       setAge("");
@@ -62,11 +71,15 @@ function Appointment() {
       alert("Booking Failed");
 
     }
+
   };
 
   return (
+
     <div className="appointment-container">
+
       <div className="appointment-card">
+
         <h2>🏥 Book Doctor Appointment</h2>
 
         <input
@@ -113,9 +126,13 @@ function Appointment() {
         <button onClick={handleBook}>
           Confirm Appointment
         </button>
+
       </div>
+
     </div>
+
   );
+
 }
 
 export default Appointment;

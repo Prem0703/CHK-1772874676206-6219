@@ -19,37 +19,42 @@ function Safety() {
         <h2>🔒 Privacy & Safety Notice</h2>
 
         <p>
-        Welcome to AI Health Assistant.
-        Your health and privacy are our top priorities.
+          Welcome to <strong>AI Health Assistant</strong>.
+          Your health data and privacy are extremely important to us.
+          Please review the following information before continuing.
         </p>
 
         <ul>
 
-          <li>✔ Your personal and medical data is securely stored.</li>
+          <li>✔ Your personal and medical data is stored securely using encrypted cloud storage.</li>
 
-          <li>✔ We never share your private information with third parties.</li>
+          <li>✔ We do not share your private information with any third party.</li>
 
-          <li>✔ AI predictions are for assistance purposes only.</li>
+          <li>✔ AI predictions are designed to assist users and are not a replacement for professional medical diagnosis.</li>
 
-          <li>✔ Always consult a certified doctor for medical advice.</li>
+          <li>✔ Always consult a certified doctor before making medical decisions.</li>
 
-          <li>✔ Emergency alert system is available for critical situations.</li>
+          <li>✔ Emergency alert system can notify medical assistance during critical situations.</li>
 
-          <li>✔ Your location is only used during emergency requests.</li>
+          <li>✔ Your location is accessed only when an emergency alert is triggered.</li>
 
         </ul>
 
-        <p>
-        By continuing, you agree to our Privacy Policy and Terms of Service.
+        <p className="notice-text">
+          By clicking continue, you acknowledge and agree to our
+          Privacy Policy and Terms of Service.
         </p>
 
-        <button onClick={handleContinue}>
+        <button
+          className="continue-btn"
+          onClick={handleContinue}
+        >
           I Understand & Continue
         </button>
 
       </div>
 
-    </div
+    </div>
 
   );
 

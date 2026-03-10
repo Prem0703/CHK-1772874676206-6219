@@ -161,7 +161,7 @@ def predict():
         return jsonify({"error": "Prediction failed"}), 500
 
 # ===============================
-# CHATBOT
+# CHATBOT By openai
 # ===============================
 
 @app.route("/chat", methods=["POST"])
@@ -200,7 +200,7 @@ See a doctor urgently if:\n
 """
 
         elif "headache" in message:
-            reply = "Rest well and stay hydrated."
+            reply = "Rest well and stay hydrated..."
 
         elif "cold" in message:
             reply = "Take steam and warm fluids."

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
 import { getAuth } from "firebase/auth";
+import emailjs from "@emailjs/browser";
 import {
   collection,
   addDoc,
@@ -14,6 +15,7 @@ import { db } from "../firebase";
 import "./Dashboard.css";
 
 function Dashboard() {
+
   const auth = getAuth();
   const user = auth.currentUser;
 
@@ -34,6 +36,7 @@ function Dashboard() {
   }, [user]);
 
   const fetchStats = async () => {
+
     const q = query(
       collection(db, "predictions"),
       where("uid", "==", user.uid)
@@ -47,26 +50,100 @@ function Dashboard() {
     let low = 0;
 
     snapshot.forEach((doc) => {
+
       total++;
+
       const conf = doc.data().confidence;
 
       if (conf < 0.5) low++;
       else if (conf < 0.8) medium++;
       else high++;
+
     });
 
     setStats({ total, high, medium, low });
+
   };
 
   const handleFileChange = (e) => {
+
     const selected = e.target.files[0];
     setFile(selected);
+
     if (selected) {
       setPreview(URL.createObjectURL(selected));
     }
+
+  };
+
+  // 📍 GET GPS LOCATION
+  const getLocation = () => {
+
+    return new Promise((resolve, reject) => {
+
+      if (!navigator.geolocation) {
+        reject("Location not supported");
+      }
+
+      navigator.geolocation.getCurrentPosition(
+
+        (position) => {
+
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+
+          const locationLink =
+            "https://www.google.com/maps?q=" + lat + "," + lon;
+
+          resolve(locationLink);
+
+        },
+
+        () => {
+          reject("Location permission denied");
+        }
+
+      );
+
+    });
+
+  };
+
+  // 🚑 MANUAL EMERGENCY ALERT
+  const callAmbulance = async () => {
+
+    try {
+
+      const location = await getLocation();
+
+      const templateParams = {
+        name: user.email,
+        age: "Unknown",
+        blood: "Unknown",
+        date: "Emergency",
+        time: "Immediate Ambulance Required",
+        location: location
+      };
+
+      await emailjs.send(
+        "service_d0mycg9",
+        "template_sm7261w",
+        templateParams,
+        "p8SiSpXWnsj8pW_6g"
+      );
+
+      alert("🚑 Ambulance Alert Sent With Location");
+
+    } catch (err) {
+
+      alert("Location permission required");
+
+    }
+
   };
 
   const handlePredict = async () => {
+
     if (!file) return alert("Please select image");
     if (!user) return alert("Login required");
 
@@ -76,6 +153,7 @@ function Dashboard() {
     formData.append("file", file);
 
     try {
+
       const res = await axios.post(
         "http://127.0.0.1:5000/predict",
         formData
@@ -92,14 +170,44 @@ function Dashboard() {
       });
 
       fetchStats();
+
+      // 🚨 AUTO ALERT IF HIGH RISK
+      if (res.data.confidence >= 0.8) {
+
+        const location = await getLocation();
+
+        const templateParams = {
+          name: user.email,
+          age: "Unknown",
+          blood: "Unknown",
+          date: "High Risk Emergency",
+          time: "AI detected high risk",
+          location: location
+        };
+
+        emailjs.send(
+          "service_d0mycg9",
+          "template_sm7261w",
+          templateParams,
+          "p8SiSpXWnsj8pW_6g"
+        );
+
+        alert("🚨 High Risk Detected. Doctor Alert Sent.");
+
+      }
+
     } catch (err) {
+
       alert("Prediction failed");
+
     }
 
     setLoading(false);
+
   };
 
   const downloadPDF = () => {
+
     const doc = new jsPDF();
 
     doc.setFontSize(20);
@@ -107,31 +215,39 @@ function Dashboard() {
 
     doc.setFontSize(14);
     doc.text(`Patient: ${user.email}`, 20, 40);
-    doc.text(`Disease: ${result.disease}`, 20, 60);
+    doc.text(`Disease: ${result?.disease}`, 20, 60);
     doc.text(
-      `Confidence: ${Math.round(result.confidence * 100)}%`,
+      `Confidence: ${Math.round(result?.confidence * 100)}%`,
       20,
       80
     );
 
     doc.save("Medical_Report.pdf");
+
   };
 
   const getRisk = () => {
+
     if (!result) return null;
 
     if (result.confidence < 0.5)
       return { label: "Low Risk", color: "#28a745" };
+
     if (result.confidence < 0.8)
       return { label: "Medium Risk", color: "#ff9800" };
+
     return { label: "High Risk", color: "#dc3545" };
+
   };
 
   return (
+
     <div className="dashboard-container">
 
-      {/* Stats Section */}
+      {/* Stats */}
+
       <div className="stats-grid">
+
         <div className="stat-card blue">
           <h3>{stats.total}</h3>
           <p>Total Predictions</p>
@@ -151,30 +267,41 @@ function Dashboard() {
           <h3>{stats.low}</h3>
           <p>Low Risk</p>
         </div>
+
       </div>
 
-      {/* Prediction Section */}
+      {/* Prediction */}
+
       <div className="prediction-card">
+
         <h2>AI Disease Prediction</h2>
 
         <div className="upload-section">
+
           <input type="file" onChange={handleFileChange} />
+
           <button onClick={handlePredict}>
             {loading ? "Analyzing..." : "Predict"}
           </button>
+
         </div>
 
         {preview && (
+
           <div className="image-preview">
             <img src={preview} alt="preview" />
           </div>
+
         )}
 
         {result && (
+
           <div className="result-card">
+
             <h3>{result.disease}</h3>
 
             <div className="progress-bar">
+
               <div
                 className="progress-fill"
                 style={{
@@ -182,6 +309,7 @@ function Dashboard() {
                   backgroundColor: getRisk().color,
                 }}
               ></div>
+
             </div>
 
             <p>
@@ -201,11 +329,38 @@ function Dashboard() {
             >
               Download Medical Report
             </button>
+
           </div>
+
         )}
+
+        {/* 🚑 EMERGENCY BUTTON */}
+
+        <button
+          style={{
+            marginTop: "20px",
+            background: "#e60023",
+            color: "white",
+            padding: "12px",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            fontWeight: "bold",
+            width: "100%"
+          }}
+          onClick={callAmbulance}
+        >
+
+          🚑 Call Ambulance / Emergency Help
+
+        </button>
+
       </div>
+
     </div>
+
   );
+
 }
 
 export default Dashboard;

@@ -1,18 +1,20 @@
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import tensorflow as tf
-from PIL import Image, ImageOps
+from PIL import Image
 import numpy as np
-import os
 from dotenv import load_dotenv
 import smtplib
 from email.mime.text import MIMEText
 from datetime import datetime
 import uuid
 
-# =====================================
-# INITIAL SETUP prem
-# =====================================
+# ===============================
+# APP SETUP
+# ===============================
 
 app = Flask(__name__)
 CORS(app)
@@ -26,9 +28,9 @@ print("EMAIL_USER:", EMAIL_USER)
 
 appointments = []
 
-# =====================================
-# LOAD MODEL prem
-# =====================================
+# ===============================
+# LOAD AI MODEL
+# ===============================
 
 MODEL_PATH = os.path.join("model", "keras_model.h5")
 LABELS_PATH = os.path.join("model", "labels.txt")
@@ -37,19 +39,34 @@ model = None
 class_names = []
 
 try:
+
     if os.path.exists(MODEL_PATH):
+
         model = tf.keras.models.load_model(MODEL_PATH, compile=False)
 
+        print("Model Loaded Successfully")
+
+    else:
+        print("Model file not found")
+
     if os.path.exists(LABELS_PATH):
+
         with open(LABELS_PATH, "r") as f:
+
             class_names = [line.strip() for line in f]
 
+        print("Labels Loaded:", class_names)
+
+    else:
+        print("Labels file not found")
+
 except Exception as e:
+
     print("Model load error:", e)
 
-# =====================================
-# EMAIL FUNCTION prem
-# =====================================
+# ===============================
+# EMAIL FUNCTION
+# ===============================
 
 def send_email(to_email, subject, message):
 
@@ -63,11 +80,9 @@ def send_email(to_email, subject, message):
 
         msg["Subject"] = subject
         msg["From"] = EMAIL_USER
-        msg["To"] = EMAIL_USER  # send to yourself for demo
+        msg["To"] = EMAIL_USER
 
         server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
-        
-        server.ehlo()
 
         server.login(EMAIL_USER, EMAIL_PASS)
 
@@ -75,22 +90,23 @@ def send_email(to_email, subject, message):
 
         server.quit()
 
-        print("Email sent successfully")
+        print("Email sent")
 
     except Exception as e:
+
         print("Email error:", e)
 
-# =====================================
-# HOME prem
-# =====================================
+# ===============================
+# HOME
+# ===============================
 
 @app.route("/")
 def home():
     return "AI Health Assistant Backend Running"
 
-# =====================================
-# IMAGE PREDICTION prem ..
-# =====================================
+# ===============================
+# AI PREDICTION
+# ===============================
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -101,14 +117,15 @@ def predict():
             return jsonify({"error": "No file uploaded"}), 400
 
         if model is None:
-            return jsonify({"error": "Model not loaded"}), 503
+            return jsonify({"error": "Model not loaded"}), 500
 
         file = request.files["file"]
 
         image = Image.open(file).convert("RGB")
-        image = ImageOps.fit(image, (224, 224), Image.Resampling.LANCZOS)
 
-        image_array = np.asarray(image)
+        image = image.resize((224, 224))
+
+        image_array = np.array(image)
 
         normalized = (image_array.astype(np.float32) / 127.5) - 1
 
@@ -116,11 +133,21 @@ def predict():
 
         prediction = model.predict(data)
 
-        index = int(np.argmax(prediction[0]))
+        print("Prediction:", prediction)
 
-        disease = class_names[index] if index < len(class_names) else "Unknown"
+        index = int(np.argmax(prediction))
 
-        confidence = float(np.max(prediction[0]))
+        print("Index:", index)
+
+        if index < len(class_names):
+            disease = class_names[index]
+        else:
+            disease = "Unknown"
+
+        confidence = float(np.max(prediction))
+
+        print("Disease:", disease)
+        print("Confidence:", confidence)
 
         return jsonify({
             "disease": disease,
@@ -133,9 +160,9 @@ def predict():
 
         return jsonify({"error": "Prediction failed"}), 500
 
-# =====================================
-# SIMPLE CHATBOT prem
-# =====================================
+# ===============================
+# CHATBOT
+# ===============================
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -147,16 +174,39 @@ def chat():
         message = data.get("message", "").lower()
 
         if "fever" in message:
-            reply = "Take rest, drink fluids and consult doctor if fever above 102°F."
+            reply = """
+Fever Information\n\n
+
+Common symptoms:\n
+- Feeling hot or chills\n
+- Sweating\n
+- Headache\n
+- Body aches\n
+- Weakness or tiredness\n
+- Loss of appetite\n
+
+What you can do at home:\n
+- Rest and avoid heavy activity\n
+- Drink plenty of fluids (water, ORS, coconut water, soups)\n
+- Eat light food like khichdi, fruits, or soup\n
+- Keep the body cool (light clothes, normal room temperature)\n
+- If needed, take Paracetamol (follow proper dosage)\n\n
+
+See a doctor urgently if:\n
+- Fever is above 39–40 °C\n
+- Lasts more than 2–3 days\n
+- Severe headache, breathing problems, vomiting, rash, or confusion\n
+- Feeling very weak or dehydrated\n
+"""
 
         elif "headache" in message:
-            reply = "Rest well and drink water. If severe pain consult doctor."
+            reply = "Rest well and stay hydrated."
 
         elif "cold" in message:
-            reply = "Take steam and stay hydrated."
+            reply = "Take steam and warm fluids."
 
         elif "acne" in message:
-            reply = "Maintain hygiene and avoid touching your face. If severe book appointment."
+            reply = "Maintain skin hygiene and consult dermatologist."
 
         else:
             reply = "Please describe your symptoms clearly."
@@ -169,9 +219,9 @@ def chat():
 
         return jsonify({"error": "Chat failed"}), 500
 
-# ====================================
-# BOOK APPOINTMENT rohit prem both
-# ====================================
+# ===============================
+# BOOK APPOINTMENT
+# ===============================
 
 @app.route("/book-appointment", methods=["POST"])
 def book_appointment():
@@ -180,28 +230,33 @@ def book_appointment():
 
         data = request.get_json()
 
-        print("Appointment API called")
-        print("Data received:", data)
-
         appointment = {
+
             "id": str(uuid.uuid4()),
+
             "patient_name": data.get("patient_name"),
+
             "patient_email": data.get("patient_email"),
+
             "doctor_name": data.get("doctor_name"),
+
             "doctor_email": data.get("doctor_email"),
+
             "date": data.get("date"),
+
             "status": "Pending",
+
             "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
         }
 
         appointments.append(appointment)
 
-        # send email notification
         send_email(
             appointment["patient_email"],
             "Appointment Request",
             f"""
-Hello {appointment['patient_name']},
+Hello {appointment['patient_name']}
 
 Your appointment request with Dr. {appointment['doctor_name']} has been received.
 
@@ -212,7 +267,7 @@ AI Health Assistant
         )
 
         return jsonify({
-            "message": "Appointment booked successfully",
+            "message": "Appointment booked",
             "appointment": appointment
         })
 
@@ -222,23 +277,27 @@ AI Health Assistant
 
         return jsonify({"error": "Booking failed"}), 500
 
-# =====================================
-# GET DOCTOR APPOINTMENTS rohit
-# =====================================
+# ===============================
+# GET DOCTOR APPOINTMENTS
+# ===============================
 
 @app.route("/doctor-appointments/<doctor_email>", methods=["GET"])
 def doctor_appointments(doctor_email):
 
     doctor_list = [
+
         a for a in appointments
+
         if a["doctor_email"] == doctor_email
+
     ]
 
     return jsonify(doctor_list)
 
-# =====================================
-# RUN SERVER rohit
-# =====================================
+# ===============================
+# RUN SERVER
+# ===============================
 
 if __name__ == "__main__":
+
     app.run(port=5000, debug=True)

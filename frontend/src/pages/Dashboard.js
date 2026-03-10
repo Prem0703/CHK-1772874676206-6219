@@ -32,14 +32,12 @@ function Dashboard() {
   });
 
   useEffect(() => {
-    if (user) {
-      fetchStats();
-    }
+    if (user) fetchStats();
   }, [user]);
 
-  const fetchStats = async () => {
+  /* ------------------ STATS ------------------ */
 
-    if (!user) return;
+  const fetchStats = async () => {
 
     const q = query(
       collection(db, "predictions"),
@@ -69,10 +67,11 @@ function Dashboard() {
 
   };
 
+  /* ------------------ FILE ------------------ */
+
   const handleFileChange = (e) => {
 
     const selected = e.target.files[0];
-
     if (!selected) return;
 
     setFile(selected);
@@ -80,7 +79,7 @@ function Dashboard() {
 
   };
 
-  /* ---------- LOCATION ---------- */
+  /* ------------------ LOCATION ------------------ */
 
   const getLocation = () => {
 
@@ -112,11 +111,9 @@ function Dashboard() {
 
   };
 
-  /* ---------- MANUAL AMBULANCE ---------- */
+  /* ------------------ EMERGENCY BUTTON ------------------ */
 
   const callAmbulance = async () => {
-
-    if (!user) return alert("Login required");
 
     try {
 
@@ -148,12 +145,11 @@ function Dashboard() {
 
   };
 
-  /* ---------- AI PREDICTION ---------- */
+  /* ------------------ AI PREDICTION ------------------ */
 
   const handlePredict = async () => {
 
     if (!file) return alert("Please select image");
-    if (!user) return alert("Login required");
 
     setLoading(true);
 
@@ -179,7 +175,7 @@ function Dashboard() {
 
       fetchStats();
 
-      /* ---------- AUTO ALERT ---------- */
+      /* -------- AUTO ALERT -------- */
 
       if (res.data.confidence >= 0.8) {
 
@@ -215,7 +211,7 @@ function Dashboard() {
 
   };
 
-  /* ---------- PDF ---------- */
+  /* ------------------ PDF ------------------ */
 
   const downloadPDF = () => {
 
@@ -227,7 +223,7 @@ function Dashboard() {
     doc.text("AI Medical Report", 20, 20);
 
     doc.setFontSize(14);
-    doc.text(`Patient: ${user?.email}`, 20, 40);
+    doc.text(`Patient: ${user.email}`, 20, 40);
     doc.text(`Disease: ${result.disease}`, 20, 60);
     doc.text(
       `Confidence: ${Math.round(result.confidence * 100)}%`,
@@ -238,6 +234,8 @@ function Dashboard() {
     doc.save("Medical_Report.pdf");
 
   };
+
+  /* ------------------ RISK LEVEL ------------------ */
 
   const getRisk = () => {
 
@@ -257,7 +255,7 @@ function Dashboard() {
 
     <div className="dashboard-container">
 
-      {/* STATS */}
+      {/* -------- STATS -------- */}
 
       <div className="stats-grid">
 
@@ -283,7 +281,7 @@ function Dashboard() {
 
       </div>
 
-      {/* PREDICTION */}
+      {/* -------- PREDICTION -------- */}
 
       <div className="prediction-card">
 
@@ -300,18 +298,21 @@ function Dashboard() {
         </div>
 
         {preview && (
+
           <div className="image-preview">
             <img src={preview} alt="preview" />
           </div>
+
         )}
 
         {result && (
 
           <div className="result-card">
 
-            <h3>{result.disease}</h3>
+            <h3>Disease: {result.disease}</h3>
 
             <div className="progress-bar">
+
               <div
                 className="progress-fill"
                 style={{
@@ -319,6 +320,7 @@ function Dashboard() {
                   backgroundColor: getRisk().color
                 }}
               />
+
             </div>
 
             <p>
@@ -343,7 +345,7 @@ function Dashboard() {
 
         )}
 
-        {/* EMERGENCY BUTTON */}
+        {/* -------- EMERGENCY BUTTON -------- */}
 
         <button
           className="emergency-btn"

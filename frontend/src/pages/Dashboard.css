@@ -5,7 +5,7 @@ gap:30px;
 width:100%;
 }
 
-/* ===== STATS ===== */
+/* stats */
 
 .stats-grid{
 display:grid;
@@ -13,20 +13,12 @@ grid-template-columns:repeat(4,1fr);
 gap:20px;
 }
 
-/* stat cards */
-
 .stat-card{
 padding:22px;
 border-radius:12px;
 color:white;
 text-align:center;
 font-weight:600;
-box-shadow:0 6px 18px rgba(0,0,0,0.08);
-transition:0.25s;
-}
-
-.stat-card:hover{
-transform:translateY(-3px);
 }
 
 .stat-card h3{
@@ -34,32 +26,18 @@ font-size:26px;
 margin-bottom:5px;
 }
 
-/* colors */
+.blue{background:#1e88e5;}
+.red{background:#e53935;}
+.orange{background:#fb8c00;}
+.green{background:#43a047;}
 
-.blue{
-background:#1e88e5;
-}
-
-.red{
-background:#e53935;
-}
-
-.orange{
-background:#fb8c00;
-}
-
-.green{
-background:#43a047;
-}
-
-/* ===== PREDICTION CARD ===== */
+/* prediction card */
 
 .prediction-card{
 background:white;
 padding:30px;
 border-radius:12px;
 max-width:650px;
-width:100%;
 box-shadow:0 6px 20px rgba(0,0,0,0.08);
 }
 
@@ -71,16 +49,33 @@ gap:10px;
 margin-bottom:20px;
 }
 
-.upload-section input{
-flex:1;
-}
-
-/* image */
+/* preview */
 
 .image-preview img{
 width:200px;
 border-radius:10px;
 margin-top:10px;
+}
+
+/* result */
+
+.result-card{
+margin-top:20px;
+padding:20px;
+background:white;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+text-align:center;
+}
+
+.result-card h3{
+color:#0b3d91;
+font-size:22px;
+}
+
+.result-card p{
+color:#333;
+margin-top:8px;
 }
 
 /* progress */
@@ -96,10 +91,9 @@ overflow:hidden;
 
 .progress-fill{
 height:100%;
-border-radius:10px;
 }
 
-/* risk badge */
+/* badge */
 
 .risk-badge{
 display:inline-block;
@@ -108,10 +102,9 @@ border-radius:6px;
 color:white;
 margin-top:10px;
 font-size:13px;
-font-weight:600;
 }
 
-/* download button */
+/* button */
 
 .download-btn{
 margin-top:15px;
@@ -121,28 +114,4 @@ border:none;
 padding:10px 18px;
 border-radius:6px;
 cursor:pointer;
-transition:0.25s;
-}
-
-.download-btn:hover{
-background:#1258a8;
-}
-
-/* emergency */
-
-.emergency-btn{
-margin-top:20px;
-background:#d32f2f;
-color:white;
-border:none;
-padding:13px;
-border-radius:8px;
-cursor:pointer;
-width:100%;
-font-weight:600;
-transition:0.25s;
-}
-
-.emergency-btn:hover{
-background:#b71c1c;
 }

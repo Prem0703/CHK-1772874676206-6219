@@ -14,6 +14,7 @@ import Profile from "./pages/Profile";
 import Safety from "./pages/Safety";
 import MedicineReminder from "./pages/MedicineReminder";
 import HealthChallenge from "./pages/HealthChallenge";
+import BMI from "./pages/BMI";
 
 function App() {
 
@@ -114,6 +115,19 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <HealthChallenge />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* BMI Calculator */}
+
+        <Route
+          path="/bmi"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <BMI />
               </Layout>
             </ProtectedRoute>
           }

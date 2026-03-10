@@ -17,7 +17,8 @@ function Sidebar() {
     { name: "🤖 Chatbot", path: "/chatbot" },
     { name: "👤 Profile", path: "/profile" },
     { name: "💊 Medicine Reminder", path: "/reminder" },
-    { name: "🏆 Health Challenge", path: "/challenge" }
+    { name: "🏆 Health Challenge", path: "/challenge" },
+    { name: "⚖ BMI Calculator", path: "/bmi" }
   ];
 
   const handleLogout = async () => {
@@ -29,14 +30,14 @@ function Sidebar() {
 
     <div className="sidebar">
 
-      {/* Patient Profile */}
+      {/* Profile Section */}
 
       <div className="profile-card">
         <h3>Patient Profile</h3>
         <p>{user?.email || "User"}</p>
       </div>
 
-      {/* Menu */}
+      {/* Navigation Menu */}
 
       <div className="menu">
 
@@ -56,7 +57,7 @@ function Sidebar() {
 
       </div>
 
-      {/* Logout Button */}
+      {/* Logout */}
 
       <button className="logout-btn" onClick={handleLogout}>
         🚪 Logout

@@ -1,3 +1,5 @@
+/* SIDEBAR */
+
 .sidebar{
 width:260px;
 min-height:100vh;
@@ -10,7 +12,7 @@ flex-shrink:0;
 box-shadow:2px 0 10px rgba(0,0,0,0.1);
 }
 
-/* profile */
+/* PROFILE CARD */
 
 .profile-card{
 background:white;
@@ -24,6 +26,7 @@ box-shadow:0 4px 10px rgba(0,0,0,0.08);
 .profile-card h3{
 margin:0;
 font-size:18px;
+color:#0b3d91;
 }
 
 .profile-card p{
@@ -32,7 +35,7 @@ font-size:14px;
 color:#555;
 }
 
-/* menu */
+/* MENU */
 
 .menu{
 display:flex;
@@ -40,39 +43,43 @@ flex-direction:column;
 gap:8px;
 }
 
-/* menu items */
+/* MENU ITEMS */
 
 .menu-item{
 padding:12px;
 background:#164caa;
-color:white;
+color:#ffffff;
 text-decoration:none;
 border-radius:8px;
 transition:0.25s;
 font-weight:500;
+display:block;
 }
+
+/* HOVER */
 
 .menu-item:hover{
 background:#1e90ff;
 transform:translateX(4px);
+color:#ffffff;
 }
 
-/* active */
+/* ACTIVE MENU */
 
 .menu-item.active{
-background:white;
+background:#ffffff;
 color:#0b3d91;
 font-weight:600;
 }
 
-/* logout */
+/* LOGOUT BUTTON */
 
 .logout-btn{
 margin-top:auto;
 padding:12px;
 background:#dc3545;
 border:none;
-color:white;
+color:#ffffff;
 border-radius:8px;
 cursor:pointer;
 font-weight:600;

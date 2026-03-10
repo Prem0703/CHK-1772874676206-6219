@@ -175,28 +175,28 @@ def chat():
 
         if "fever" in message:
             reply = """
-Fever Information\n\n
+Fever Information
 
-Common symptoms:\n
-- Feeling hot or chills\n
-- Sweating\n
-- Headache\n
-- Body aches\n
-- Weakness or tiredness\n
-- Loss of appetite\n
+Common symptoms:
+- Feeling hot or chills
+- Sweating
+- Headache
+- Body aches
+- Weakness or tiredness
+- Loss of appetite
 
-What you can do at home:\n
-- Rest and avoid heavy activity\n
-- Drink plenty of fluids (water, ORS, coconut water, soups)\n
-- Eat light food like khichdi, fruits, or soup\n
-- Keep the body cool (light clothes, normal room temperature)\n
-- If needed, take Paracetamol (follow proper dosage)\n\n
+What you can do at home:
+- Rest and avoid heavy activity
+- Drink plenty of fluids (water, ORS, coconut water, soups)
+- Eat light food like khichdi, fruits, or soup
+- Keep the body cool (light clothes, normal room temperature)
+- If needed, take Paracetamol (follow proper dosage)
 
-See a doctor urgently if:\n
-- Fever is above 39–40 °C\n
-- Lasts more than 2–3 days\n
-- Severe headache, breathing problems, vomiting, rash, or confusion\n
-- Feeling very weak or dehydrated\n
+See a doctor urgently if:
+- Fever is above 39–40 °C
+- Lasts more than 2–3 days
+- Severe headache, breathing problems, vomiting, rash, or confusion
+- Feeling very weak or dehydrated
 """
 
         elif "headache" in message:

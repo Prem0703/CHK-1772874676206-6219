@@ -89,7 +89,7 @@ def home():
     return "AI Health Assistant Backend Running"
 
 # =====================================
-# IMAGE PREDICTION prem
+# IMAGE PREDICTION prem ..
 # =====================================
 
 @app.route("/predict", methods=["POST"])

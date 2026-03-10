@@ -13,110 +13,134 @@ import Chatbot from "./pages/Chatbot";
 import Profile from "./pages/Profile";
 import Safety from "./pages/Safety";
 import MedicineReminder from "./pages/MedicineReminder";
+import HealthChallenge from "./pages/HealthChallenge";
 
 function App() {
 
-return (
+  return (
 
-<Router>
+    <Router>
 
-  <Routes>
+      <Routes>
 
-    {/* Public Routes */}
+        {/* Public Routes */}
 
-    <Route path="/" element={<Login />} />
-    <Route path="/register" element={<Register />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-    {/* Protected Routes */}
+        {/* Dashboard */}
 
-    <Route
-      path="/dashboard"
-      element={
-        <ProtectedRoute>
-          <Layout>
-            <Dashboard />
-          </Layout>
-        </ProtectedRoute>
-      }
-    />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Dashboard />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
 
-    <Route
-      path="/history"
-      element={
-        <ProtectedRoute>
-          <Layout>
-            <History />
-          </Layout>
-        </ProtectedRoute>
-      }
-    />
+        {/* History */}
 
-    <Route
-      path="/appointment"
-      element={
-        <ProtectedRoute>
-          <Layout>
-            <Appointment />
-          </Layout>
-        </ProtectedRoute>
-      }
-    />
+        <Route
+          path="/history"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <History />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
 
-    <Route
-      path="/chatbot"
-      element={
-        <ProtectedRoute>
-          <Layout>
-            <Chatbot />
-          </Layout>
-        </ProtectedRoute>
-      }
-    />
+        {/* Appointment */}
 
-    <Route
-      path="/profile"
-      element={
-        <ProtectedRoute>
-          <Layout>
-            <Profile />
-          </Layout>
-        </ProtectedRoute>
-      }
-    />
+        <Route
+          path="/appointment"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Appointment />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
 
-    {/* NEW PAGE */}
+        {/* Chatbot */}
 
-    <Route
-      path="/reminder"
-      element={
-        <ProtectedRoute>
-          <Layout>
-            <MedicineReminder />
-          </Layout>
-        </ProtectedRoute>
-      }
-    />
+        <Route
+          path="/chatbot"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Chatbot />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
 
-    <Route
-      path="/safety"
-      element={
-        <ProtectedRoute>
-          <Layout>
-            <Safety />
-          </Layout>
-        </ProtectedRoute>
-      }
-    />
+        {/* Profile */}
 
-    {/* Default redirect */}
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Profile />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
 
-    <Route path="*" element={<Navigate to="/" />} />
+        {/* Medicine Reminder */}
 
-  </Routes>
+        <Route
+          path="/reminder"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <MedicineReminder />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
 
-</Router>
+        {/* Health Challenge */}
 
-);
+        <Route
+          path="/challenge"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <HealthChallenge />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Safety Page */}
+
+        <Route
+          path="/safety"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Safety />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Default Redirect */}
+
+        <Route path="*" element={<Navigate to="/" />} />
+
+      </Routes>
+
+    </Router>
+
+  );
 
 }
 

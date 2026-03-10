@@ -52,30 +52,67 @@ return () => clearInterval(interval);
 
 return (
 
-<div style={{padding:"30px"}}>
+<div
+  style={{
+    padding:"30px",
+    background:"#ffffff",
+    borderRadius:"10px",
+    color:"#222",
+    maxWidth:"600px"
+  }}
+>
 
-  <h2>Medicine Reminder</h2>
+  <h2 style={{color:"#0b3d91"}}>Medicine Reminder</h2>
 
   <input
     placeholder="Medicine Name"
     value={medicine}
     onChange={(e)=>setMedicine(e.target.value)}
+    style={{
+      width:"100%",
+      padding:"10px",
+      marginTop:"10px",
+      marginBottom:"10px",
+      color:"#000",
+      background:"#fff",
+      border:"1px solid #ccc",
+      borderRadius:"6px"
+    }}
   />
 
   <input
     type="time"
     value={time}
     onChange={(e)=>setTime(e.target.value)}
+    style={{
+      width:"100%",
+      padding:"10px",
+      marginBottom:"10px",
+      color:"#000",
+      background:"#fff",
+      border:"1px solid #ccc",
+      borderRadius:"6px"
+    }}
   />
 
-  <button onClick={addReminder}>
+  <button
+    onClick={addReminder}
+    style={{
+      background:"#1976d2",
+      color:"#fff",
+      border:"none",
+      padding:"10px 20px",
+      borderRadius:"6px",
+      cursor:"pointer"
+    }}
+  >
     Add Reminder
   </button>
 
-  <h3 style={{marginTop:"20px"}}>Your Reminders</h3>
+  <h3 style={{marginTop:"20px", color:"#333"}}>Your Reminders</h3>
 
   {reminders.map((r)=>(
-    <div key={r.id}>
+    <div key={r.id} style={{color:"#333", marginTop:"5px"}}>
       💊 {r.medicine} at {r.time}
     </div>
   ))}

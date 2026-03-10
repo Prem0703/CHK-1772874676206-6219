@@ -5,65 +5,66 @@ import "./Sidebar.css";
 
 function Sidebar() {
 
-const auth = getAuth();
-const user = auth.currentUser;
-const location = useLocation();
-const navigate = useNavigate();
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const location = useLocation();
+  const navigate = useNavigate();
 
-const menu = [
-{ name: "Dashboard", path: "/dashboard" },
-{ name: "History", path: "/history" },
-{ name: "Appointment", path: "/appointment" },
-{ name: "Chatbot", path: "/chatbot" },
-{ name: "Profile", path: "/profile" },
-{ name: "Medicine Reminder", path: "/reminder" }
-];
+  const menu = [
+    { name: "🏠 Dashboard", path: "/dashboard" },
+    { name: "📊 History", path: "/history" },
+    { name: "📅 Appointment", path: "/appointment" },
+    { name: "🤖 Chatbot", path: "/chatbot" },
+    { name: "👤 Profile", path: "/profile" },
+    { name: "💊 Medicine Reminder", path: "/reminder" },
+    { name: "🏆 Health Challenge", path: "/challenge" }
+  ];
 
-const handleLogout = async () => {
-await signOut(auth);
-navigate("/");
-};
+  const handleLogout = async () => {
+    await signOut(auth);
+    navigate("/");
+  };
 
-return (
+  return (
 
-<div className="sidebar">
+    <div className="sidebar">
 
-  {/* Profile Card */}
+      {/* Patient Profile */}
 
-  <div className="profile-card">
-    <h3>Patient Profile</h3>
-    <p>{user?.email || "User"}</p>
-  </div>
+      <div className="profile-card">
+        <h3>Patient Profile</h3>
+        <p>{user?.email || "User"}</p>
+      </div>
 
-  {/* Menu */}
+      {/* Menu */}
 
-  <div className="menu">
+      <div className="menu">
 
-    {menu.map((item) => (
+        {menu.map((item) => (
 
-      <Link
-        key={item.path}
-        to={item.path}
-        className={`menu-item ${
-          location.pathname === item.path ? "active" : ""
-        }`}
-      >
-        {item.name}
-      </Link>
+          <Link
+            key={item.path}
+            to={item.path}
+            className={`menu-item ${
+              location.pathname === item.path ? "active" : ""
+            }`}
+          >
+            {item.name}
+          </Link>
 
-    ))}
+        ))}
 
-  </div>
+      </div>
 
-  {/* Logout */}
+      {/* Logout Button */}
 
-  <button className="logout-btn" onClick={handleLogout}>
-    Logout
-  </button>
+      <button className="logout-btn" onClick={handleLogout}>
+        🚪 Logout
+      </button>
 
-</div>
+    </div>
 
-);
+  );
 
 }
 

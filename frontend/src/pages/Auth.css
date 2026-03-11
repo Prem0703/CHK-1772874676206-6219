@@ -3,9 +3,15 @@ height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-background:linear-gradient(to right,#0b3d91,#1e90ff);
-}
 
+background:
+linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),
+url("../../public/medical-bg.jpg");
+
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+}
 /* card */
 
 .auth-card{

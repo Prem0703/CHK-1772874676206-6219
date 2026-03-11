@@ -295,7 +295,7 @@ def doctor_appointments(doctor_email):
     return jsonify(doctor_list)
 
 # ===============================
-# RUN SERVER
+# RUN SERVER sum
 # ===============================
 
 if __name__ == "__main__":

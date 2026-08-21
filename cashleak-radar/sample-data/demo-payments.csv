@@ -1,0 +1,4 @@
+id,customer,amount,payment_date,reference
+pay-001,ABC Traders,10000,2026-08-12,UPI12345
+pay-002,Sunrise Studio,8500,2026-08-21,UPI67890
+pay-003,Unknown Customer,3200,2026-08-20,UPI99999

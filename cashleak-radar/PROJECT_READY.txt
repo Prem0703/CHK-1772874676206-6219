@@ -1,0 +1,3 @@
+CashLeak Radar project foundation ready for review.
+Branch: cashleak-radar
+Existing main content intentionally untouched.

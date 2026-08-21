@@ -6,8 +6,11 @@ from pydantic import BaseModel, Field
 
 from app.models import Invoice, Payment
 from app.reconciliation import anomaly_dicts, reconcile
+from app.routes import router
+from app.services.health import service_status
 
 app = FastAPI(title="CashLeak Radar API", version="0.1.0")
+app.include_router(router)
 
 class Health(BaseModel):
     status: str
@@ -36,6 +39,10 @@ class ReconcileRequest(BaseModel):
 @app.get("/health", response_model=Health)
 def health():
     return {"status": "ok", "service": "cashleak-radar-api"}
+
+@app.get("/api/status")
+def status():
+    return service_status()
 
 @app.get("/api/dashboard/summary")
 def dashboard_summary():

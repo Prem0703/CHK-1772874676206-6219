@@ -1,0 +1,4 @@
+id,customer,invoice_number,amount,issue_date,due_date,status
+inv-001,ABC Traders,INV-001,18400,2026-08-01,2026-08-15,open
+inv-002,Sunrise Studio,INV-002,8500,2026-08-10,2026-08-20,open
+inv-003,Metro Supplies,INV-003,12500,2026-08-12,2026-08-22,open

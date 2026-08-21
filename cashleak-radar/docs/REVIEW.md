@@ -1,0 +1,1 @@
+Review focus: product flow, reconciliation correctness, tenant isolation, upload safety, AI provider boundaries, test coverage and whether the next milestone should wire persistence before external integrations.
